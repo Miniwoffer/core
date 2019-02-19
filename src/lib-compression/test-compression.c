@@ -72,6 +72,12 @@ static void test_compression_handler(const struct compression_handler *handler)
 
 	/* read and uncompress the data */
 	file_input = i_stream_create_fd(fd, IO_BLOCK_SIZE);
+
+	/* test is_compressed detection */
+	if(handler->is_compressed) {
+		test_assert(compression_detect_handler(file_input) == handler);
+	}
+
 	input = handler->create_istream(file_input, FALSE);
 
 	test_assert(i_stream_get_size(input, FALSE, &stream_size) == 1);
@@ -108,7 +114,6 @@ static void test_compression_handler(const struct compression_handler *handler)
 static void test_compression(void)
 {
 	unsigned int i;
-
 	for (i = 0; compression_handlers[i].name != NULL; i++) {
 		if (compression_handlers[i].create_istream != NULL)
 			test_compression_handler(&compression_handlers[i]);
@@ -313,6 +318,7 @@ int main(int argc, char *argv[])
 		test_gz_concat,
 		test_gz_no_concat,
 		test_gz_large_header,
+
 		NULL
 	};
 	if (argc == 2) {
