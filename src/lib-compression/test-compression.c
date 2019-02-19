@@ -114,6 +114,7 @@ static void test_compression_handler(const struct compression_handler *handler)
 static void test_compression(void)
 {
 	unsigned int i;
+
 	for (i = 0; compression_handlers[i].name != NULL; i++) {
 		if (compression_handlers[i].create_istream != NULL)
 			test_compression_handler(&compression_handlers[i]);
@@ -318,7 +319,6 @@ int main(int argc, char *argv[])
 		test_gz_concat,
 		test_gz_no_concat,
 		test_gz_large_header,
-
 		NULL
 	};
 	if (argc == 2) {
