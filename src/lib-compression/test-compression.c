@@ -73,8 +73,8 @@ static void test_compression_handler(const struct compression_handler *handler)
 	/* read and uncompress the data */
 	file_input = i_stream_create_fd(fd, IO_BLOCK_SIZE);
 
-	/* test is_compressed detection */
-	if(handler->is_compressed) {
+	/* test compression_detect_handler */
+	if (handler->is_compressed) {
 		test_assert(compression_detect_handler(file_input) == handler);
 	}
 
