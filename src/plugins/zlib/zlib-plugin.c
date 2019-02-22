@@ -358,8 +358,8 @@ static void zlib_mail_user_created(struct mail_user *user)
 	name = mail_user_plugin_getenv(user, "zlib_save_level");
 	if (name != NULL) {
 		if (str_to_uint(name, &zuser->save_level) < 0 ||
-		    zuser->save_level < 1 || zuser->save_level > 9) {
-			i_error("zlib_save_level: Level must be between 1..9");
+		    zuser->save_level < 1 || zuser->save_level > 22) {
+			i_error("zlib_save_level: Level must be between 1..22");
 			zuser->save_level = 0;
 		}
 	}
