@@ -12,7 +12,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 
-static void test_compression_handler(const struct compression_handler *handler)
+static void test_compression_handler(const struct compression_handler *handler,int level)
 {
 	const char *path = "test-compression.tmp";
 	struct istream *file_input, *input;
@@ -27,14 +27,14 @@ static void test_compression_handler(const struct compression_handler *handler)
 	int fd;
 	ssize_t ret;
 
-	test_begin(t_strdup_printf("compression handler %s", handler->name));
+	//test_begin(t_strdup_printf("compression handler %s", handler->name));
 
 	/* write compressed data */
 	fd = open(path, O_TRUNC | O_CREAT | O_RDWR, 0600);
 	if (fd == -1)
 		i_fatal("creat(%s) failed: %m", path);
 	file_output = o_stream_create_fd_file(fd, 0, FALSE);
-	output = handler->create_ostream(file_output, 1);
+	output = handler->create_ostream(file_output, level);
 	sha1_init(&sha1);
 
 	/* 1) write lots of easily compressible data */
@@ -80,6 +80,7 @@ static void test_compression_handler(const struct compression_handler *handler)
 	test_assert(i_stream_get_size(input, TRUE, &stream_size) == 1);
 	test_assert(stream_size == uncompressed_size);
 
+	printf("%d,%f\n",level,uncompressed_size *0.1 / compressed_size);
 	sha1_init(&sha1);
 	for (bool seeked = FALSE;;) {
 		sha1_init(&sha1);
@@ -102,16 +103,15 @@ static void test_compression_handler(const struct compression_handler *handler)
 	i_unlink(path);
 	i_close_fd(&fd);
 
-	test_end();
+	//test_end();
 }
 
 static void test_compression(void)
 {
 	unsigned int i;
 
-	for (i = 0; compression_handlers[i].name != NULL; i++) {
-		if (compression_handlers[i].create_istream != NULL)
-			test_compression_handler(&compression_handlers[i]);
+	for(i = 1; i <= 22; i++) {	
+		test_compression_handler(&compression_handlers[5],i);
 	}
 }
 
