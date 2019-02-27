@@ -346,6 +346,7 @@ static void zlib_mail_user_created(struct mail_user *user)
 	v->deinit = zlib_mail_user_deinit;
 
 	name = mail_user_plugin_getenv(user, "zlib_save");
+	i_info("loading zlib plugin with compression handler %s",name);
 	if (name != NULL && *name != '\0') {
 		zuser->save_handler = compression_lookup_handler(name);
 		if (zuser->save_handler == NULL)
@@ -356,6 +357,7 @@ static void zlib_mail_user_created(struct mail_user *user)
 		}
 	}
 	name = mail_user_plugin_getenv(user, "zlib_save_level");
+	i_info("loading zlib plugin with compression level %s",name);
 	if (name != NULL) {
 		if (str_to_uint(name, &zuser->save_level) < 0 ||
 		    zuser->save_level < 1 || zuser->save_level > 22) {
